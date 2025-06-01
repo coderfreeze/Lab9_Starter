@@ -87,7 +87,13 @@
     </section>
   </main>
 
+    <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+
   <script>
+
+    window.TrackJS && TrackJS.install({ 
+      token: "9052da8f43a64cf89d015c406e0868e8",
+    });
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -102,6 +108,129 @@
 
     // Start your code here
     // You may move this JS to another file if you wish
+    errorBtns[0].addEventListener('click', () => {
+      console.log('Console logged');
+    });
+
+    errorBtns[1].addEventListener('click', () => {
+      console.error('error: ', new Error('Something went wrong'));
+    });
+
+    errorBtns[2].addEventListener('click', () => {
+      console.count('myCount');
+    });
+
+    errorBtns[3].addEventListener('click', () => {
+      console.warn('this is a warning');
+    });
+
+    errorBtns[4].addEventListener('click', () => {
+      console.assert(2 + 2 === 5, 'console.assert: 2 + 2 should be 4')
+    });
+
+    errorBtns[5].addEventListener('click', () => {
+      console.clear();
+    })
+
+    errorBtns[6].addEventListener('click', () => {
+      let person = { name: 'Alice', age: 28, city: 'Seattle' };
+      console.dir(person);
+    });
+
+    errorBtns[7].addEventListener('click', () => {
+      let main = document.querySelector('main');
+      console.dirxml(main);
+    });
+
+    // Group start
+    errorBtns[8].addEventListener('click', () => {
+      console.group('👥 Group Start Demo');
+      console.log('Inside group: item 1');
+      console.log('Inside group: item 2');
+    });
+
+    // Group end
+    errorBtns[9].addEventListener('click', () => {
+      console.groupEnd();
+    });
+    
+    errorBtns[10].addEventListener('click', () => {
+      let fruits = [
+        { name: 'Apple', color: 'Red', weight: 120 },
+        { name: 'Banana', color: 'Yellow', weight: 100 },
+        { name: 'Cherry', color: 'Red', weight: 10 } 
+      ]
+      console.table(fruits);
+    });
+
+    errorBtns[11].addEventListener('click', () => {
+      console.time('myTimer');
+    });
+
+    errorBtns[12].addEventListener('click', () => {
+      console.timeEnd('myTimer');
+    });
+
+    errorBtns[13].addEventListener('click', () => {
+      function a() { b(); }
+      function b() { c(); }
+      function c() { console.trace('Trace:'); }
+      a();
+    });
+
+    // global error btn
+    errorBtns[14].addEventListener('click', () => {
+      try {
+        let element = document.getElementById('wrongid');
+        element.click();
+      } catch (error) {
+        console.log()
+        throw error;
+      }
+    })
+
+    let element = document.getElementById('calculate');
+    try {
+     element.addEventListener('click', () => {
+      console.log('user clicked calculate button! (try block)')
+     });
+     element.click();
+    } catch (error) {
+      console.log('caught error trying to click calculate button: ', error);
+    } finally {
+      console.log('Finally block: try to reinitialize button');
+    };
+
+    class CalculationError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "CalculationError";
+      }
+    }
+
+
+    form.addEventListener('submit', () => {
+      try {
+        let output = document.querySelector('output');
+        let firstNum = document.querySelector('#first-num').value;
+        let secondNum = document.querySelector('#second-num').value;
+        let operator = document.querySelector('#operator').value;
+        const numericRegex = /^\d+$/;
+        if (!numericRegex.test(firstNum) || !numericRegex.test(secondNum)) {
+          throw new CalculationError('custom error: must be numbers');
+        }
+        output.textContent = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (error) {
+        if (error instanceof CalculationError) {
+          console.error(error.name + ':', error.message);
+        } else {
+          console.error('unexpected error: ', error);
+        }
+      }
+    });
+
+    // uncaught global error
+    throw new Error("test error");
   </script>
 </body>
 
